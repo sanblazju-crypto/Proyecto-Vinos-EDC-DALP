@@ -97,6 +97,25 @@ class Evaluator:
         # Determinar el mejor modelo por accuracy
         best_model = max(self.results, key=lambda k: self.results[k]["accuracy"])
         best_acc = self.results[best_model]["accuracy"]
-        print(f"\nMejor modelo: '{best_model}' con accuracy {best_acc * 100:.2f}%")
+        print(f"\n✅ Mejor modelo: '{best_model}' con accuracy {best_acc * 100:.2f}%")
         print(separator)
         logger.info(f"Mejor modelo: '{best_model}' | Accuracy: {best_acc:.4f}")
+
+
+# ── Ejecución independiente ────────────────────────────────────────────────────
+
+if __name__ == "__main__":
+    from data_loader import DataLoader
+    from preprocessor import Preprocessor
+    from trainer import Trainer
+    print("Ejecutando Evaluator de forma independiente...")
+    loader = DataLoader()
+    df = loader.load()
+    prep = Preprocessor()
+    X_scaled, y = prep.fit_transform(df, loader.get_feature_names())
+    trainer = Trainer(train_size=0.7, random_state=25)
+    trainer.split(X_scaled, y)
+    modelos = trainer.train()
+    evaluator = Evaluator(trainer.X_test, trainer.y_test, loader.get_target_names())
+    evaluator.evaluate(modelos)
+    evaluator.print_summary()

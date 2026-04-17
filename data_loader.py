@@ -69,3 +69,13 @@ class DataLoader:
             return
         logger.info("Resumen estadístico del dataset:")
         logger.debug(f"\n{self.df.describe().to_string()}")
+
+
+# ── Ejecución independiente ────────────────────────────────────────────────────
+
+if __name__ == "__main__":
+    print("Ejecutando DataLoader de forma independiente...")
+    loader = DataLoader()
+    df = loader.load()
+    loader.summary()
+    print(f"\nPrimeras filas:\n{df.head()}")

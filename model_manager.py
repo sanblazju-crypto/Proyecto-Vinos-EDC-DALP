@@ -50,7 +50,7 @@ class ModelManager:
                 filepath = os.path.join(self.model_dir, filename)
                 joblib.dump(model, filepath)
                 saved_paths[name] = filepath
-                logger.info(f"Modelo '{name}' guardado en: {filepath}")
+                logger.info(f"✔ Modelo '{name}' guardado en: {filepath}")
 
             except Exception as e:
                 logger.error(f"Error al guardar el modelo '{name}': {e}", exc_info=True)
@@ -100,7 +100,7 @@ class ModelManager:
                 filepath = os.path.join(self.model_dir, filename)
                 model = joblib.load(filepath)
                 loaded_models[model_name] = model
-                logger.info(f"Modelo '{model_name}' cargado desde: {filepath}")
+                logger.info(f"✔ Modelo '{model_name}' cargado desde: {filepath}")
 
             except Exception as e:
                 logger.error(f"Error al cargar el modelo '{filename}': {e}", exc_info=True)
@@ -123,3 +123,18 @@ class ModelManager:
         models = [f.replace(".joblib", "") for f in os.listdir(self.model_dir) if f.endswith(".joblib")]
         logger.debug(f"Modelos guardados disponibles: {models}")
         return models
+
+
+# ── Ejecución independiente ────────────────────────────────────────────────────
+
+if __name__ == "__main__":
+    print("Ejecutando ModelManager de forma independiente...")
+    manager = ModelManager()
+    guardados = manager.list_saved()
+    if guardados:
+        print(f"Modelos disponibles en disco: {guardados}")
+        modelos = manager.load()
+        print(f"Modelos cargados correctamente: {list(modelos.keys())}")
+    else:
+        print("No hay modelos guardados en disco todavía.")
+        print("Ejecuta el pipeline completo primero: python app.py")

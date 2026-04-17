@@ -85,3 +85,16 @@ class Preprocessor:
         except Exception as e:
             logger.error(f"Error al transformar datos nuevos: {e}", exc_info=True)
             raise
+
+
+# ── Ejecución independiente ────────────────────────────────────────────────────
+
+if __name__ == "__main__":
+    from data_loader import DataLoader
+    print("Ejecutando Preprocessor de forma independiente...")
+    loader = DataLoader()
+    df = loader.load()
+    preprocessor = Preprocessor()
+    X_scaled, y = preprocessor.fit_transform(df, loader.get_feature_names())
+    print(f"X_scaled shape: {X_scaled.shape} | y shape: {y.shape}")
+    print(f"Primera muestra escalada:\n{X_scaled[0]}")

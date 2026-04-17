@@ -118,7 +118,7 @@ class Trainer:
                 model.fit(self.X_train, self.y_train)
 
                 self.trained_models[key] = model
-                logger.info(f"Modelo '{key}' entrenado correctamente.")
+                logger.info(f"✔ Modelo '{key}' entrenado correctamente.")
 
             except Exception as e:
                 logger.error(f"Error al entrenar el modelo '{key}': {e}", exc_info=True)
@@ -130,3 +130,19 @@ class Trainer:
 
         logger.info(f"Entrenamiento finalizado. Modelos disponibles: {list(self.trained_models.keys())}")
         return self.trained_models
+
+
+# ── Ejecución independiente ────────────────────────────────────────────────────
+
+if __name__ == "__main__":
+    from data_loader import DataLoader
+    from preprocessor import Preprocessor
+    print("Ejecutando Trainer de forma independiente...")
+    loader = DataLoader()
+    df = loader.load()
+    prep = Preprocessor()
+    X_scaled, y = prep.fit_transform(df, loader.get_feature_names())
+    trainer = Trainer(train_size=0.7, random_state=25)
+    trainer.split(X_scaled, y)
+    modelos = trainer.train()
+    print(f"Modelos entrenados: {list(modelos.keys())}")
